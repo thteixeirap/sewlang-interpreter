@@ -1,0 +1,6 @@
+(print "Enter the first number: ")
+(var a (read-num))
+(print "Enter the second number: ")
+(var b (read-num))
+(var sum (+ a b))
+(print a " + " b " = " sum)

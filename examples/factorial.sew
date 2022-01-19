@@ -1,0 +1,12 @@
+(print "Enter the number:")
+(var n (read-num))
+(if (< n 0)
+	(print "Invalid Number!")
+	(begin
+		(var fact 1)
+		(for (var i 1) (< i (+ n 1)) (++ i)
+			(set fact (* fact i))
+		)
+		(print "Factorial of " n " is " fact)
+	)
+)

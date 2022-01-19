@@ -1,0 +1,7 @@
+(var x 0)
+(while (< x 10)
+	(begin
+		(++ x)
+		(print "Numero " x)
+	)
+)
