@@ -6,14 +6,14 @@ import sewlang.exception.ExpIdentifierRequiredException
 
 object ExpInterpreter {
 
-  implicit val globalEnvironment = Environment(Map(
+  val globalEnvironment = Environment(Map(
     "null" -> NilV,
     "PI" -> NumberV(math.Pi),
     "E" -> NumberV(math.E)))
 
-  def apply(exp: Exp)(implicit env: Environment): Value = eval(exp)(env)
+  def apply(exp: Exp)(env: Environment): Value = eval(exp)(env)
 
-  def eval(exp: Exp)(implicit env: Environment): Value = exp match {
+  def eval(exp: Exp)(env: Environment): Value = exp match {
     case NumberExp(n)                  => NumberV(n)
     case StringExp(s)                  => StringV(s)
     case TrueExp                       => BoolV(true)
@@ -21,6 +21,9 @@ object ExpInterpreter {
     case NilExp                        => NilV
 
     case IdExp(id)                     => env.lookup(id)
+
+    case VarDeclExp(id, exp)           => evalVarDecl(id, exp)(env)
+    case VarAssignExp(id, exp)         => evalVarAssign(id, exp)(env)
 
     case SumExp(exp1, exp2)            => evalArithExp(_ + _, eval(exp1)(env), eval(exp2)(env))
     case MultExp(exp1, exp2)           => evalArithExp(_ * _, eval(exp1)(env), eval(exp2)(env))
@@ -34,9 +37,6 @@ object ExpInterpreter {
     case AndExp(exp1, exp2)            => evalBoolExp(_ && _, eval(exp1)(env), eval(exp2)(env))
     // #12 Implemente a avaliação da expressão (or exp1 exp2)
 
-    case VarDeclExp(id, exp)           => evalVarDecl(id, exp)(env)
-    case VarAssignExp(id, exp)         => evalVarAssign(id, exp)(env)
-
     case IfExp(cond, thenExp, elseExp) => evalIfExp(eval(cond)(env), thenExp, elseExp)(env)
 
     case WhileExp(cond, doExp)         => evalWhileExp(cond, doExp)(env)
@@ -46,10 +46,21 @@ object ExpInterpreter {
     case PrintExp(exps)                => evalPrintExp(exps)(env)
 
     case ReadNumExp                    => NumberV(readDouble())
+    // #13 Implemente a avaliação das expressões (read-bool) e (read-str)
   }
 
   private[interpreter] var print: (Any) => Unit = println // for testing purposes
   private[interpreter] var readDouble: () => Double = io.StdIn.readDouble // for testing purposes
+
+  private def evalVarDecl(id: Exp, exp: Exp)(env: Environment): Value = id match {
+    case IdExp(id) => env.declare(id, eval(exp)(env))
+    case _         => throw ExpIdentifierRequiredException("identifier is required in a variable declaration")
+  }
+
+  private def evalVarAssign(id: Exp, exp: Exp)(env: Environment): Value = id match {
+    case IdExp(id) => env.update(id, eval(exp)(env))
+    case _         => throw ExpIdentifierRequiredException("identifier is required in a variable assignment")
+  }
 
   private def evalArithExp(op: (Double, Double) => Double, val1: Value, val2: Value): Value = (val1, val2) match {
     case (NumberV(num1), NumberV(num2)) => NumberV(op(num1, num2))
@@ -72,16 +83,6 @@ object ExpInterpreter {
     case _                            => throw ExpInvalidValueTypeException(s"logical expression requires boolean values but received '$val1' and '$val2'")
   }
 
-  private def evalVarDecl(id: Exp, exp: Exp)(env: Environment): Value = id match {
-    case IdExp(id) => env.declare(id, eval(exp)(env))
-    case _         => throw ExpIdentifierRequiredException("identifier is required in a variable declaration")
-  }
-
-  private def evalVarAssign(id: Exp, exp: Exp)(env: Environment): Value = id match {
-    case IdExp(id) => env.update(id, eval(exp)(env))
-    case _         => throw ExpIdentifierRequiredException("identifier is required in a variable assignment")
-  }
-
   private def evalIfExp(cond: Value, thenExp: Exp, elseExp: Exp)(env: Environment): Value = cond match {
     case BoolV(true)  => eval(thenExp)(env)
     case BoolV(false) => eval(elseExp)(env)
@@ -102,7 +103,7 @@ object ExpInterpreter {
     val blockEnv = Environment(env)
     val defaultVal: Value = NilV
     exps.foldLeft(defaultVal)((value: Value, exp: Exp) => eval(exp)(blockEnv))
-  }
+  } 
 
   private def evalPrintExp(exps: List[Exp])(env: Environment): Value = {
     print(exps.map(exp => eval(exp)(env)).mkString(""))

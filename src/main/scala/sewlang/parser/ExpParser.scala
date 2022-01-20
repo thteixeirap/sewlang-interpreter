@@ -19,15 +19,15 @@ object ExpParser {
 
     case SList(List(SSym("+"), exp1, exp2)) => SumExp(parse(exp1), parse(exp2)) // (+ exp1 exp2)
     case SList(List(SSym("*"), exp1, exp2)) => MultExp(parse(exp1), parse(exp2)) // (* exp1 exp2)
-    // #6 Implemente o parser para as expressões (- exp1 exp2), (/ exp1 exp2) e (- exp)
+    // #5 Implemente o parser para as expressões (- exp1 exp2), (/ exp1 exp2) e (- exp)
 
     case SList(List(SSym("="), exp1, exp2)) => EqualExp(parse(exp1), parse(exp2)) // (= exp1 exp2)
     case SList(List(SSym("<"), exp1, exp2)) => LessThanExp(parse(exp1), parse(exp2)) // (< exp1 exp2)
-    // #7 Implemente o parser para as expressões (<= exp1 exp2), (> exp1 exp2) e (>= exp1 exp2)
+    // #6 Implemente o parser para as expressões (<= exp1 exp2), (> exp1 exp2) e (>= exp1 exp2)
 
     case SList(List(SSym("not"), exp)) => NotExp(parse(exp)) // (not exp)
     case SList(List(SSym("and"), exp1, exp2)) => AndExp(parse(exp1), parse(exp2)) // (and exp1 exp2)
-    // #8 Implemente o parser para a expressão (or exp1 exp2)
+    // #7 Implemente o parser para a expressão (or exp1 exp2)
 
     case SList(List(SSym("var"), id, exp2)) => VarDeclExp(parse(id), parse(exp2)) // (var id exp)
     case SList(List(SSym("set"), id, exp2)) => VarAssignExp(parse(id), parse(exp2)) // (set id exp)
@@ -41,13 +41,13 @@ object ExpParser {
     case SList(SSym("print") :: exps) => PrintExp(exps.map(parse(_))) // (print exp*)
 
     case SList(List(SSym("read-num"))) => ReadNumExp // (read-num)
-    // #9 Implemente o parser para as expressões (read-bool) e (read-str)
+    // #8 Implemente o parser para as expressões (read-bool) e (read-str)
 
     case _ => throw ExpParserException(s"error in the expression '$sexp'")
   }
 
   /*
- * #5 Implemente a verificação de palavras reservadas de
+ * #9 Implemente a verificação de palavras reservadas de
  * modo que não seja possível utilizar uma palavra-chave
  * como 'while', por exemplo, como um identificador.
  */

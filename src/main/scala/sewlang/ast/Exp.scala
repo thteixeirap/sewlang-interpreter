@@ -4,10 +4,10 @@ sealed abstract class Exp
 
 // Value Expressions
 case class NumberExp(value: Double) extends Exp
-case class StringExp(value: String) extends Exp
 case object TrueExp extends Exp
 case object FalseExp extends Exp
 case object NilExp extends Exp
+case class StringExp(value: String) extends Exp
 case class IdExp(id: String) extends Exp
 
 // Arithmetic Expressions
@@ -39,6 +39,6 @@ case class WhileExp(cond: Exp, doExp: Exp) extends Exp // (while cond do-exp)
 case class BlockExp(exps: List[Exp]) extends Exp // (begin exp*)
 
 // IO Expressions
-case class PrintExp(exps: List[Exp]) extends Exp // (print "x = " x)
+case class PrintExp(exps: List[Exp]) extends Exp // (print exp*)
 case object ReadNumExp extends Exp // (read-num)
 // #4 Defina a AST para as expressões (read-bool) e (read-str)

@@ -10,45 +10,45 @@ import org.scalatest.BeforeAndAfterAll
 
 class ExpInterpreterTest extends AnyFunSuite with BeforeAndAfterAll with MockFactory with ExpTestUtilities {
 
-  implicit val testEnvironment = Environment(Map("null" -> NilV, "PI" -> NumberV(math.Pi), "zero" -> NumberV(0)))
+  val testEnv = Environment(Map("null" -> NilV, "PI" -> NumberV(math.Pi), "zero" -> NumberV(0)))
 
   test("Exp Interpreting Basic Value Expressions") {
-    assert(ExpInterpreter(parseSExprToExp("0")) == NumberV(0))
-    assert(ExpInterpreter(parseSExprToExp("5.2")) == NumberV(5.2))
-    assert(ExpInterpreter(parseSExprToExp("\"test\"")) == StringV("test"))
-    assert(ExpInterpreter(parseSExprToExp("\"\"")) == StringV(""))
-    assert(ExpInterpreter(parseSExprToExp("true")) == BoolV(true))
-    assert(ExpInterpreter(parseSExprToExp("false")) == BoolV(false))
-    assert(ExpInterpreter(parseSExprToExp("nil")) == NilV)
+    assert(ExpInterpreter(parseSExprToExp("0"))(testEnv) == NumberV(0))
+    assert(ExpInterpreter(parseSExprToExp("5.2"))(testEnv) == NumberV(5.2))
+    assert(ExpInterpreter(parseSExprToExp("\"test\""))(testEnv) == StringV("test"))
+    assert(ExpInterpreter(parseSExprToExp("\"\""))(testEnv) == StringV(""))
+    assert(ExpInterpreter(parseSExprToExp("true"))(testEnv) == BoolV(true))
+    assert(ExpInterpreter(parseSExprToExp("false"))(testEnv) == BoolV(false))
+    assert(ExpInterpreter(parseSExprToExp("nil"))(testEnv) == NilV)
   }
 
   test("Exp Interpreting Bound Id Expressions") {
-    assert(ExpInterpreter(parseSExprToExp("null")) == NilV)
-    assert(ExpInterpreter(parseSExprToExp("PI")) == NumberV(math.Pi))
+    assert(ExpInterpreter(parseSExprToExp("null"))(testEnv) == NilV)
+    assert(ExpInterpreter(parseSExprToExp("PI"))(testEnv) == NumberV(math.Pi))
   }
 
   test("Exp Interpreting Unbound Id Expressions") {
     val caught =
       intercept[ExpUnboundVariableException] {
-        ExpInterpreter(parseSExprToExp("num"))
+        ExpInterpreter(parseSExprToExp("num"))(testEnv)
       }
     assert(caught.getMessage.contains("num"))
   }
 
   test("Exp Interpreting Sum Expressions") {
-    assert(ExpInterpreter(parseSExprToExp("(+ 2 3)")) == NumberV(5))
-    assert(ExpInterpreter(parseSExprToExp("(+ 1.2 zero)")) == NumberV(1.2))
+    assert(ExpInterpreter(parseSExprToExp("(+ 2 3)"))(testEnv) == NumberV(5))
+    assert(ExpInterpreter(parseSExprToExp("(+ 1.2 zero)"))(testEnv) == NumberV(1.2))
   }
 
   test("Exp Interpreting Multiplication Expressions") {
-    assert(ExpInterpreter(parseSExprToExp("(* 2 3.5)")) == NumberV(7))
-    assert(ExpInterpreter(parseSExprToExp("(* zero (+ 2 3))")) == NumberV(0))
+    assert(ExpInterpreter(parseSExprToExp("(* 2 3.5)"))(testEnv) == NumberV(7))
+    assert(ExpInterpreter(parseSExprToExp("(* zero (+ 2 3))"))(testEnv) == NumberV(0))
   }
 
   test("Exp Interpreting Invalid Arithmetic Expressions") {
     var caught =
       intercept[ExpInvalidValueTypeException] {
-        ExpInterpreter(parseSExprToExp("(+ 1 true)"))
+        ExpInterpreter(parseSExprToExp("(+ 1 true)"))(testEnv)
       }
     assert(caught.getMessage.contains("arithmetic"))
     assert(caught.getMessage.contains("1"))
@@ -56,7 +56,7 @@ class ExpInterpreterTest extends AnyFunSuite with BeforeAndAfterAll with MockFac
 
     caught =
       intercept[ExpInvalidValueTypeException] {
-        ExpInterpreter(parseSExprToExp("(* \"x\" 3)"))
+        ExpInterpreter(parseSExprToExp("(* \"x\" 3)"))(testEnv)
       }
     assert(caught.getMessage.contains("arithmetic"))
     assert(caught.getMessage.contains("x"))
@@ -64,7 +64,7 @@ class ExpInterpreterTest extends AnyFunSuite with BeforeAndAfterAll with MockFac
 
     caught =
       intercept[ExpInvalidValueTypeException] {
-        ExpInterpreter(parseSExprToExp("(* null false)"))
+        ExpInterpreter(parseSExprToExp("(* null false)"))(testEnv)
       }
     assert(caught.getMessage.contains("arithmetic"))
     assert(caught.getMessage.contains("nil"))
@@ -72,21 +72,21 @@ class ExpInterpreterTest extends AnyFunSuite with BeforeAndAfterAll with MockFac
   }
 
   test("Exp Interpreting Equal Expressions") {
-    assert(ExpInterpreter(parseSExprToExp("(= zero 0)")) == BoolV(true))
-    assert(ExpInterpreter(parseSExprToExp("(= 3 (+ 2 1))")) == BoolV(true))
-    assert(ExpInterpreter(parseSExprToExp("(= 2 3)")) == BoolV(false))
+    assert(ExpInterpreter(parseSExprToExp("(= zero 0)"))(testEnv) == BoolV(true))
+    assert(ExpInterpreter(parseSExprToExp("(= 3 (+ 2 1))"))(testEnv) == BoolV(true))
+    assert(ExpInterpreter(parseSExprToExp("(= 2 3)"))(testEnv) == BoolV(false))
   }
 
   test("Exp Interpreting Less Than Expressions") {
-    assert(ExpInterpreter(parseSExprToExp("(< zero 1)")) == BoolV(true))
-    assert(ExpInterpreter(parseSExprToExp("(< 3 (* 4 7))")) == BoolV(true))
-    assert(ExpInterpreter(parseSExprToExp("(< (+ 2 3) 5)")) == BoolV(false))
+    assert(ExpInterpreter(parseSExprToExp("(< zero 1)"))(testEnv) == BoolV(true))
+    assert(ExpInterpreter(parseSExprToExp("(< 3 (* 4 7))"))(testEnv) == BoolV(true))
+    assert(ExpInterpreter(parseSExprToExp("(< (+ 2 3) 5)"))(testEnv) == BoolV(false))
   }
 
   test("Exp Interpreting Invalid Relational Expressions") {
     var caught =
       intercept[ExpInvalidValueTypeException] {
-        ExpInterpreter(parseSExprToExp("(= 1 true)"))
+        ExpInterpreter(parseSExprToExp("(= 1 true)"))(testEnv)
       }
     assert(caught.getMessage.contains("relational"))
     assert(caught.getMessage.contains("1"))
@@ -94,7 +94,7 @@ class ExpInterpreterTest extends AnyFunSuite with BeforeAndAfterAll with MockFac
 
     caught =
       intercept[ExpInvalidValueTypeException] {
-        ExpInterpreter(parseSExprToExp("(< false 3)"))
+        ExpInterpreter(parseSExprToExp("(< false 3)"))(testEnv)
       }
     assert(caught.getMessage.contains("relational"))
     assert(caught.getMessage.contains("false"))
@@ -102,38 +102,38 @@ class ExpInterpreterTest extends AnyFunSuite with BeforeAndAfterAll with MockFac
 
     caught =
       intercept[ExpInvalidValueTypeException] {
-        ExpInterpreter(parseSExprToExp("(= \"false\" false)"))
+        ExpInterpreter(parseSExprToExp("(= \"false\" false)"))(testEnv)
       }
     assert(caught.getMessage.contains("relational"))
     assert(caught.getMessage.contains("false"))
   }
 
   test("Exp Interpreting Not Expressions") {
-    assert(ExpInterpreter(parseSExprToExp("(not true)")) == BoolV(false))
-    assert(ExpInterpreter(parseSExprToExp("(not false)")) == BoolV(true))
-    assert(ExpInterpreter(parseSExprToExp("(not (< zero 1))")) == BoolV(false))
-    assert(ExpInterpreter(parseSExprToExp("(not (= 2 3))")) == BoolV(true))
+    assert(ExpInterpreter(parseSExprToExp("(not true)"))(testEnv) == BoolV(false))
+    assert(ExpInterpreter(parseSExprToExp("(not false)"))(testEnv) == BoolV(true))
+    assert(ExpInterpreter(parseSExprToExp("(not (< zero 1))"))(testEnv) == BoolV(false))
+    assert(ExpInterpreter(parseSExprToExp("(not (= 2 3))"))(testEnv) == BoolV(true))
   }
 
   test("Exp Interpreting And Expressions") {
-    assert(ExpInterpreter(parseSExprToExp("(and true (not false))")) == BoolV(true))
-    assert(ExpInterpreter(parseSExprToExp("(and true false)")) == BoolV(false))
-    assert(ExpInterpreter(parseSExprToExp("(and false true)")) == BoolV(false))
-    assert(ExpInterpreter(parseSExprToExp("(and false false)")) == BoolV(false))
-    assert(ExpInterpreter(parseSExprToExp("(and (= (+ 2 3) 5) (< 0 1))")) == BoolV(true))
+    assert(ExpInterpreter(parseSExprToExp("(and true (not false))"))(testEnv) == BoolV(true))
+    assert(ExpInterpreter(parseSExprToExp("(and true false)"))(testEnv) == BoolV(false))
+    assert(ExpInterpreter(parseSExprToExp("(and false true)"))(testEnv) == BoolV(false))
+    assert(ExpInterpreter(parseSExprToExp("(and false false)"))(testEnv) == BoolV(false))
+    assert(ExpInterpreter(parseSExprToExp("(and (= (+ 2 3) 5) (< 0 1))"))(testEnv) == BoolV(true))
   }
 
   test("Exp Interpreting Invalid Logical Expressions") {
     var caught =
       intercept[ExpInvalidValueTypeException] {
-        ExpInterpreter(parseSExprToExp("(not 1)"))
+        ExpInterpreter(parseSExprToExp("(not 1)"))(testEnv)
       }
     assert(caught.getMessage.contains("logical"))
     assert(caught.getMessage.contains("1"))
 
     caught =
       intercept[ExpInvalidValueTypeException] {
-        ExpInterpreter(parseSExprToExp("(and false 3)"))
+        ExpInterpreter(parseSExprToExp("(and false 3)"))(testEnv)
       }
     assert(caught.getMessage.contains("logical"))
     assert(caught.getMessage.contains("false"))
@@ -141,7 +141,7 @@ class ExpInterpreterTest extends AnyFunSuite with BeforeAndAfterAll with MockFac
 
     caught =
       intercept[ExpInvalidValueTypeException] {
-        ExpInterpreter(parseSExprToExp("(and nil true)"))
+        ExpInterpreter(parseSExprToExp("(and nil true)"))(testEnv)
       }
     assert(caught.getMessage.contains("logical"))
     assert(caught.getMessage.contains("nil"))
@@ -149,7 +149,7 @@ class ExpInterpreterTest extends AnyFunSuite with BeforeAndAfterAll with MockFac
 
     caught =
       intercept[ExpInvalidValueTypeException] {
-        ExpInterpreter(parseSExprToExp("(and 1 1)"))
+        ExpInterpreter(parseSExprToExp("(and 1 1)"))(testEnv)
       }
     assert(caught.getMessage.contains("logical"))
     assert(caught.getMessage.contains("1"))
@@ -157,7 +157,7 @@ class ExpInterpreterTest extends AnyFunSuite with BeforeAndAfterAll with MockFac
   }
 
   test("Exp Interpreting Variable Declaration") {
-    val localTestEnv = Environment(testEnvironment)
+    val localTestEnv = Environment(testEnv)
     assert(ExpInterpreter(parseSExprToExp("(var x 10)"))(localTestEnv) == NumberV(10))
     assert(ExpInterpreter(parseSExprToExp("(var continue true)"))(localTestEnv) == BoolV(true))
     assert(localTestEnv.lookup("x") == NumberV(10))
@@ -165,7 +165,7 @@ class ExpInterpreterTest extends AnyFunSuite with BeforeAndAfterAll with MockFac
   }
 
   test("Exp Interpreting Variable Assignment") {
-    val localTestEnv = Environment(Map("x" -> NumberV(0), "continue" -> BoolV(true)), testEnvironment)
+    val localTestEnv = Environment(Map("x" -> NumberV(0), "continue" -> BoolV(true)), testEnv)
     assert(ExpInterpreter(parseSExprToExp("(set x (+ x 1))"))(localTestEnv) == NumberV(1))
     assert(ExpInterpreter(parseSExprToExp("(set continue false)"))(localTestEnv) == BoolV(false))
     assert(localTestEnv.lookup("x") == NumberV(1))
@@ -173,7 +173,7 @@ class ExpInterpreterTest extends AnyFunSuite with BeforeAndAfterAll with MockFac
   }
 
   test("Exp Interpreting Variable Declaration and Assignment Without Identifier") {
-    val localTestEnv = Environment(testEnvironment)
+    val localTestEnv = Environment(testEnv)
     assertThrows[ExpIdentifierRequiredException] {
       ExpInterpreter(parseSExprToExp("(var 10 x)"))(localTestEnv)
     }
@@ -192,7 +192,7 @@ class ExpInterpreterTest extends AnyFunSuite with BeforeAndAfterAll with MockFac
 
   test("Exp Interpreting If Expressions Without Boolean Condition") {
     assertThrows[ExpInvalidValueTypeException] {
-      ExpInterpreter(parseSExprToExp("(if nil 1 2)"))
+      ExpInterpreter(parseSExprToExp("(if nil 1 2)"))(testEnv)
     }
   }
 
@@ -206,7 +206,7 @@ class ExpInterpreterTest extends AnyFunSuite with BeforeAndAfterAll with MockFac
 
   test("Exp Interpreting While Expressions Without Boolean Condition") {
     assertThrows[ExpInvalidValueTypeException] {
-      ExpInterpreter(parseSExprToExp("(while 1 (+ 1 2))"))
+      ExpInterpreter(parseSExprToExp("(while 1 (+ 1 2))"))(testEnv)
     }
   }
 
@@ -243,35 +243,35 @@ class ExpInterpreterTest extends AnyFunSuite with BeforeAndAfterAll with MockFac
     val printTest1 = mockFunction[Any, Unit]
     printTest1 expects ("x = 1")
     ExpInterpreter.print = printTest1
-    assert(ExpInterpreter(parseSExprToExp("(print \"x = \" 1)")) == NilV)
+    assert(ExpInterpreter(parseSExprToExp("(print \"x = \" 1)"))(testEnv) == NilV)
 
     val printTest2 = mockFunction[Any, Unit]
     printTest2 expects ("truefalsenil")
     ExpInterpreter.print = printTest2
-    assert(ExpInterpreter(parseSExprToExp("(print true false nil)")) == NilV)
+    assert(ExpInterpreter(parseSExprToExp("(print true false nil)"))(testEnv) == NilV)
 
     val printTest3 = mockFunction[Any, Unit]
     printTest3 expects ""
     ExpInterpreter.print = printTest3
-    assert(ExpInterpreter(parseSExprToExp("(print)")) == NilV)
+    assert(ExpInterpreter(parseSExprToExp("(print)"))(testEnv) == NilV)
 
     val printTest4 = mockFunction[Any, Unit]
     printTest4 expects ("x = 2.5")
     ExpInterpreter.print = printTest4
-    assert(ExpInterpreter(parseSExprToExp("(print \"x = \" 2.5)")) == NilV)
+    assert(ExpInterpreter(parseSExprToExp("(print \"x = \" 2.5)"))(testEnv) == NilV)
   }
 
   test("Exp Interpreting Read Number Expressioon") {
     val readTest1 = mockFunction[Double]
     readTest1 expects () returning 5.0
     ExpInterpreter.readDouble = readTest1
-    assert(ExpInterpreter(parseSExprToExp("(read-num)")) == NumberV(5.0))
+    assert(ExpInterpreter(parseSExprToExp("(read-num)"))(testEnv) == NumberV(5.0))
 
     val readTest2 = mockFunction[Double]
     readTest2 expects () returning 1
     readTest2 expects () returning 2
     ExpInterpreter.readDouble = readTest2
-    assert(ExpInterpreter(parseSExprToExp("(+ (read-num) (read-num))")) == NumberV(3.0))
+    assert(ExpInterpreter(parseSExprToExp("(+ (read-num) (read-num))"))(testEnv) == NumberV(3.0))
   }
 
   override def afterAll() = {
