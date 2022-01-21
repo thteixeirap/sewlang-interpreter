@@ -1,13 +1,14 @@
 package sewlang.runner
 
-import sewlang.util.FileReader
-import scala.util.{ Failure, Success }
-import sexpr.exception.SExprParserException
-import sewlang.exception._
-import sexpr.parser.SExprParser
-import sewlang.desugar.ExpDesugar
-import sewlang.parser.ExpParser
+import scala.util.Failure
+import scala.util.Success
+
+import sewlang.exception.ExpParserException
 import sewlang.interpreter.ExpInterpreter
+import sewlang.parser.ExpParser
+import sewlang.util.FileReader
+import sexpr.exception.SExprParserException
+import sexpr.parser.SExprParser
 
 object ExpFileRunner {
 
@@ -22,8 +23,7 @@ object ExpFileRunner {
     try {
       ExpInterpreter.eval(
         ExpParser.parse(
-          ExpDesugar.desugar(
-            SExprParser.parse(s"(begin $sourceCode)"))))(ExpInterpreter.globalEnvironment)
+          SExprParser.parse(s"(begin $sourceCode)")))(ExpInterpreter.globalEnvironment)
     } catch {
       case e: SExprParserException => Console.err.println(s"s-expression parsing error: ${e.getMessage}")
       case e: ExpParserException   => Console.err.println(s"sewlang parsing error: ${e.getMessage}")

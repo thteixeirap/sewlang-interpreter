@@ -196,4 +196,24 @@ class ExpParserTest extends AnyFunSuite with ExpTestUtilities {
     assert(caught.getMessage.contains("mod x 2"))
   }
 
+  test("Exp Parsing Desugared Increment and Sum Augmented Assignment Expressions") {
+    assert(ExpParser(parseSExpr("(++ x)")) == VarAssignExp(IdExp("x"), SumExp(IdExp("x"), NumberExp(1))))
+    assert(ExpParser(parseSExpr("(set y (++ x))")) == VarAssignExp(IdExp("y"), VarAssignExp(IdExp("x"), SumExp(IdExp("x"), NumberExp(1)))))
+
+    assert(ExpParser(parseSExpr("(+= x 5)")) == VarAssignExp(IdExp("x"), SumExp(IdExp("x"), NumberExp(5))))
+    assert(ExpParser(parseSExpr("(+= x (++ y))")) == VarAssignExp(IdExp("x"), SumExp(IdExp("x"), VarAssignExp(IdExp("y"), SumExp(IdExp("y"), NumberExp(1))))))
+  }
+
+  test("Exp Parsing Desugared For Expressions") {
+    // (for (var x 0) (< x 10) (++ x) (print x))
+    val input1 = SList(List(SSym("for"), SList(List(SSym("var"), SSym("x"), SNum(0))), SList(List(SSym("<"), SSym("x"), SNum(10))), SList(List(SSym("++"), SSym("x"))), SList(List(SSym("print"), SSym("x")))))
+    // (begin (var x 0) (while (< x 10) (begin (print x) (++ x))))
+    val expected1 = BlockExp(List(VarDeclExp(IdExp("x"), NumberExp(0)), WhileExp(LessThanExp(IdExp("x"), NumberExp(10)), BlockExp(List(PrintExp(List(IdExp("x"))), VarAssignExp(IdExp("x"), SumExp(IdExp("x"), NumberExp(1))))))))
+    assert(ExpParser(input1) == expected1)
+
+    val input2 = "(for (var i 0) (< i 10) (set i (+ i 1)) (print i))"
+    val expected2 = "(begin (var i 0) (while (< i 10) (begin (print i) (set i (+ i 1)))))"
+    assert(ExpParser(parseSExpr(input2)) == ExpParser(parseSExpr(expected2)))
+  }
+
 }

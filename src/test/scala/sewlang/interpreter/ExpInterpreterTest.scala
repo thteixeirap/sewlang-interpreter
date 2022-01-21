@@ -274,6 +274,28 @@ class ExpInterpreterTest extends AnyFunSuite with BeforeAndAfterAll with MockFac
     assert(ExpInterpreter(parseSExprToExp("(+ (read-num) (read-num))"))(testEnv) == NumberV(3.0))
   }
 
+  test("Exp Interpreting Increment and Sum Augmented Assignment Expressions") {
+    val localTestEnv = Environment(Map("x" -> NumberV(0), "y" -> NumberV(2)))
+
+    assert(ExpInterpreter(parseSExprToExp("(++ x)"))(localTestEnv) == NumberV(1))
+    assert(localTestEnv.lookup("x") == NumberV(1))
+
+    assert(ExpInterpreter(parseSExprToExp("(+ 3 (++ x))"))(localTestEnv) == NumberV(5))
+    assert(localTestEnv.lookup("x") == NumberV(2))
+
+    assert(ExpInterpreter(parseSExprToExp("(+= y 3)"))(localTestEnv) == NumberV(5))
+    assert(localTestEnv.lookup("y") == NumberV(5))
+
+    assert(ExpInterpreter(parseSExprToExp("(* 5 (+= y -3))"))(localTestEnv) == NumberV(10))
+    assert(localTestEnv.lookup("y") == NumberV(2))
+  }
+
+  test("Exp Interpreting For Expressions") {
+    val localTestEnv = Environment(testEnv)
+    assert(ExpInterpreter(parseSExprToExp("(for (var x 0) (< x 10) (++ x) x)"))(localTestEnv) == NumberV(10))
+    assert(ExpInterpreter(parseSExprToExp("(for (var x 10) (< 0 x) (set x (+ x -1)) x)"))(localTestEnv) == NumberV(0))
+  }
+
   override def afterAll() = {
     ExpInterpreter.print = println
     ExpInterpreter.readDouble = io.StdIn.readDouble
