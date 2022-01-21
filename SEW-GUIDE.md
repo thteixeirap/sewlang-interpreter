@@ -52,7 +52,7 @@ Sintaxe:
 
 `number ::= "[-+]?[0-9]*\.?[0-9]+"`
 
-Exemplos: 2, 2.5 e -3
+Exemplos: `2`, `2.5` e `-3`
 
 #### Booleano
 
@@ -70,7 +70,7 @@ Sintaxe:
 
 `string ::=  "\"[^\"]*\""`
 
-Exemplos: "Olá mundo!", "Teste"
+Exemplos: `"Olá mundo!"`, `"Teste"`
 
 #### Nil
 
@@ -92,7 +92,7 @@ Sintaxe:
 
 `op-arith ::= + | - | * | /`
 
-Exemplos: (+ 2 3), (* x 5), (- (/ x 3) 32), (- 1)
+Exemplos: `(+ 2 3)`, `(* x 5)`, `(- (/ x 3) 32)`, `(- 1)`
 
 #### Expressões Relacionais
 
@@ -102,7 +102,7 @@ Sintaxe:
 
 `op-rel ::= = | < | > | <= | >=`
 
-Exemplos: (= 2 2), (> x 0), (<= x (+ y 2))
+Exemplos: `(= 2 2)`, `(> x 0)`, `(<= x (+ y 2))`
 
 #### Expressões Lógicas
 
@@ -112,7 +112,7 @@ Sintaxe:
 
 `<opt-bool> ::= and | or`
 
-Exemplos: (and (>= x 0) (<= x 10)), (not (< x 1)), (or (= x y) (< y z))
+Exemplos: `(and (>= x 0) (<= x 10))`, `(not (< x 1))`, `(or (= x y) (< y z))`
 
 
 ### Variáveis
@@ -129,7 +129,7 @@ Sintaxe:
 
 `<var-decl-exp> ::= (var <ident> <exp>)`
 
-Exemplos: (var x 0), (var cond true), (var y (+ y 1))
+Exemplos: `(var x 0)`, `(var cond true)`, `(var y (+ y 1))`
 
 #### Atribuição
 
@@ -139,7 +139,7 @@ Sintaxe:
 
 `<var-asig-exp> ::= (set <ident> <exp>)`
 
-Exemplos: (set x (+ x 1)), (set a (+ b c)), (set cond false) 
+Exemplos: `(set x (+ x 1))`, `(set a (+ b c))`, `(set cond false)`
 
 
 #### Expressão Condicional If
@@ -159,9 +159,9 @@ Uma expressão de repetição while possui duas expressões: uma condição (<co
 
 Sintaxe:
 
-`<while-exp> ::= (while <cond> <do-exp>)
+`<while-exp> ::= (while <cond> <do-exp>)`
 
-Exemplos: (while (< x 10) (set x (- x 1)))
+Exemplos: `(while (< x 10) (set x (- x 1)))`
 
 
 #### Expressão de Bloco
@@ -192,11 +192,13 @@ A definição de um bloco é a única forma de ter várias expressões sendo exe
 A expressão print permite que um ou mais valores sejam escrito na tela. O valor de uma expressão print é nil.
 
 Sintaxe:
-<print>: "(" "print" <exp>* ")"
 
+`<print> ::= (print <exp>*)`
 
-A linguagem possui três expressões para leitura de dados: readnum, readbool e readline que, respectivamente, fazem a leitura de um número, valor booleano e String do teclado. O resultado de uma expressão de leitura é igual ao valor que foi lido.
-A expressão readnum permite que um valor numérico seja lido do teclado. A
+Exemplos: `(print 1 " + " 2 " = " (+ 1 2))`
 
+#### Read
+
+A linguagem possui três expressões para leitura de dados: `(read-num)`, `(read-bool)` e `(read-str)` que, respectivamente, fazem a leitura de um número, valor booleano e string do teclado. O resultado de uma expressão de leitura é igual ao valor que foi lido.
 
 [^1]: O interpretador da **sew lang** já cria de forma automática um bloco inicial para um programa que vai ser interpretado. Assim, já podemos definir um programa com várias expressões sequênciais sem ter que declarar elas dentro de um bloco inicial. Um exemplo disso é o programa do [Fatorial](examples/factorial.sew) que foi apresentado no início deste documento. Se o conteúdo desse programa não fosse inserido de forma automática dentro de um bloco, teríamos um erro de *parsing*.
