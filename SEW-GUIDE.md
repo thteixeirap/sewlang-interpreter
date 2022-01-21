@@ -155,7 +155,7 @@ Exemplos: `(if (> a b) (set max a) (set max b))`, `(if (< x 0) (set x (+ x 1)) x
 
 #### Expressão de Repetição While
 
-Uma expressão de repetição while possui duas expressões: uma condição (<cond>) e uma expressão do laço (<exp-loop>). Na expressão while, a condição é avaliada primeiro. Caso ela seja verdadeira, a expressão do laço é avaliada e o processo é repetido novamente. Caso a condição seja falsa, o processo é finalizado. O resultado da expressão while é igual ao último resultado da avaliação da expressão do laço (resultado da última iteração). No caso em que a condição do while já começa sendo falsa, de modo que a expressão do laço nunca é avaliada, o resultado da expressão while é nil.
+Uma expressão de repetição while possui duas expressões: uma condição (`<cond>`) e uma expressão do laço (`<do-exp>`). Na expressão while, a condição é avaliada primeiro. Caso ela seja verdadeira, a expressão do laço é avaliada e o processo é repetido novamente. Caso a condição seja falsa, o processo é finalizado. O resultado da expressão while é igual ao último resultado da avaliação da expressão do laço (resultado da última iteração). No caso em que a condição do while já começa sendo falsa, de modo que a expressão do laço nunca é avaliada, o resultado da expressão while é nil.
 
 Sintaxe:
 
