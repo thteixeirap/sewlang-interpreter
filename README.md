@@ -397,13 +397,15 @@ object ExpDesugar {
 Agora só precisamos adicionar essas transformações no nosso parser para que as novas expressões possam ser utilizadas:
 
 ```scala
-  def eval(exp: Exp)(env: Environment): Value = exp match {
+object ExpParser {
+  def parse(sexp: SExpr): Exp = sexp match {
     // ...
     case SList(List(SSym("++"), id)) => parse(ExpDesugar.desugar(sexp))
     case SList(List(SSym("+="), id, exp)) => parse(ExpDesugar.desugar(sexp))
     case SList(List(SSym("for"), init, cond, mod, body)) => parse(ExpDesugar.desugar(sexp))
     // ...
   }
+}
 ```
 
 Com isso, já podemos implementar um programa como o abaixo:
