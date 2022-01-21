@@ -141,7 +141,9 @@ object ExpParser {
 }
 ```
 
-Assim como na definição da nossa AST `Exp`, o nosso *parser* `ExpParser` também está incompleto. Seu segundo trabalho é implementar o processo de *parsing* para as expressões que foram deixadas de fora da AST (ver [#5](https://github.com/jbsneto-cefetmg/sewlang-interpreter/blob/a359f3f659ab6c77de68ba5a732d0c2b8d4209ac/src/main/scala/sewlang/parser/ExpParser.scala#L22), [#6](https://github.com/jbsneto-cefetmg/sewlang-interpreter/blob/a359f3f659ab6c77de68ba5a732d0c2b8d4209ac/src/main/scala/sewlang/parser/ExpParser.scala#L26), [#7](https://github.com/jbsneto-cefetmg/sewlang-interpreter/blob/a359f3f659ab6c77de68ba5a732d0c2b8d4209ac/src/main/scala/sewlang/parser/ExpParser.scala#L30) e [#8](https://github.com/jbsneto-cefetmg/sewlang-interpreter/blob/a359f3f659ab6c77de68ba5a732d0c2b8d4209ac/src/main/scala/sewlang/parser/ExpParser.scala#L44)). Além disso, também é seu trabalho implementar a verificação de palavras reservadas em identificadores. Nossa linguagem possui várias palavras-chave, algumas delas são `var`, `set`, `if` e `while`, por exemplo. Entretanto, da forma em que nossa verificação de identificador está implementada (ver método `isIdentifier`), é possível ter variáveis com nomes de palavras-chave. Apesar disso não ser um problema, o uso de palavras-chave como identificadores prejudica a legilibilidade da linguagem visto que pode ser difícil diferenciar um identificador de uma palavra-chave no programa. Seu objetivo é proibir o uso de palavras-chave como identificadores (ver [#9](https://github.com/jbsneto-cefetmg/sewlang-interpreter/blob/a359f3f659ab6c77de68ba5a732d0c2b8d4209ac/src/main/scala/sewlang/parser/ExpParser.scala#L50)).
+Assim como na definição da nossa AST `Exp`, o nosso *parser* `ExpParser` também está incompleto. Seu segundo trabalho é implementar o processo de *parsing* para as expressões que foram deixadas de fora da AST (ver [#5](https://github.com/jbsneto-cefetmg/sewlang-interpreter/blob/f3ffe229967dfd8473f6a39633bc31a51f8fca90/src/main/scala/sewlang/parser/ExpParser.scala#L21), [#6](https://github.com/jbsneto-cefetmg/sewlang-interpreter/blob/f3ffe229967dfd8473f6a39633bc31a51f8fca90/src/main/scala/sewlang/parser/ExpParser.scala#L25), [#7](https://github.com/jbsneto-cefetmg/sewlang-interpreter/blob/f3ffe229967dfd8473f6a39633bc31a51f8fca90/src/main/scala/sewlang/parser/ExpParser.scala#L29) e [#8](https://github.com/jbsneto-cefetmg/sewlang-interpreter/blob/f3ffe229967dfd8473f6a39633bc31a51f8fca90/src/main/scala/sewlang/parser/ExpParser.scala#L43)). Além disso, também é seu trabalho implementar a verificação de palavras reservadas em identificadores. Nossa linguagem possui várias palavras-chave, algumas delas são `var`, `set`, `if` e `while`, por exemplo. Entretanto, da forma em que nossa verificação de identificador está implementada (ver método `isIdentifier`), é possível ter variáveis com nomes de palavras-chave. Apesar disso não ser um problema, o uso de palavras-chave como identificadores prejudica a legibilidade da linguagem visto que pode ser difícil diferenciar um identificador de uma palavra-chave no programa. Seu objetivo é proibir o uso de palavras-chave como identificadores (ver [#9](https://github.com/jbsneto-cefetmg/sewlang-interpreter/blob/f3ffe229967dfd8473f6a39633bc31a51f8fca90/src/main/scala/sewlang/parser/ExpParser.scala#L59)).
+
+Nesse mesmo arquivo também se encontram as tarefas [#14](https://github.com/jbsneto-cefetmg/sewlang-interpreter/blob/f3ffe229967dfd8473f6a39633bc31a51f8fca90/src/main/scala/sewlang/parser/ExpParser.scala#L47), [#15](https://github.com/jbsneto-cefetmg/sewlang-interpreter/blob/f3ffe229967dfd8473f6a39633bc31a51f8fca90/src/main/scala/sewlang/parser/ExpParser.scala#L50) e [#16](https://github.com/jbsneto-cefetmg/sewlang-interpreter/blob/f3ffe229967dfd8473f6a39633bc31a51f8fca90/src/main/scala/sewlang/parser/ExpParser.scala#L53). Entretanto, elas só vão ser trabalhadas após a implementação do interpretador, quando a gente for trabalhar com *syntatic sugar*. Portanto, você deve pular essas tarefas e ir para as tarefas descritas na seção seguinte. Iremos retornar para elas mais para frente.
 
 ## Semântica
 
@@ -149,7 +151,7 @@ Agora que já passamos por todo o processo de *parsing*, já podemos implementar
 
 ### Sistema de Tipos
 
-Nossa liguagem implementa quatro tipos de valores: número (*number*), booleano (*boolean*), *string* e *nil*. Por questão de simplicidade, vamos trabalhar com um único tipo numérico. Para isso, escolhemos o tipo `Double` do Scala que é o tipo numérico mais abrangente. O tipo booleano possui dois valores possíveis, `true` e `false`. O tipo *string* permite a definição de sequência de caracteres definidos entrem aspas duplas `"str"`. Por último, o valor `nil` serve para representar a ausência de valor ou valor nulo, algo que é necessário em alguns contextos. Para representar esses tipos de valores, definimos a classe [Value](src/main/scala/sewlang/interpreter/Value.scala) que define uma base para os outros tipos e uma classe para cada um dos tipos:
+Nossa linguagem implementa quatro tipos de valores: número (*number*), booleano (*boolean*), *string* e *nil*. Por questão de simplicidade, vamos trabalhar com um único tipo numérico. Para isso, escolhemos o tipo `Double` do Scala que é o tipo numérico mais abrangente. O tipo booleano possui dois valores possíveis, `true` e `false`. O tipo *string* permite a definição de sequência de caracteres definidos entrem aspas duplas `"str"`. Por último, o valor `nil` serve para representar a ausência de valor ou valor nulo, algo que é necessário em alguns contextos. Para representar esses tipos de valores, definimos a classe [Value](src/main/scala/sewlang/interpreter/Value.scala) que define uma base para os outros tipos e uma classe para cada um dos tipos:
 
 ```scala
 abstract class Value
@@ -270,7 +272,7 @@ Nossa linguagem também possui uma expressão condicional que recebe três expre
 
 #### Expressão de Repetição While
 
-Nossa linguagem possui a expressão `while` que permite com que uma expresão seja avaliada de forma repetida dada uma expressão de condição que deve ser avaliada em cada repetição. Enquanto a expressão de condição for avaliada para o valor `true`, a outra expressão vai ser avaliada. Esse processo só é encerrado quando a expressão de condição for avaliada para `false`. Como o nosso  `while` também é uma expressão, sua avaliação deve retornar um valor. Na **sew lang**, o valor retornado por uma expressão `while` corresponde ao último valor que foi avaliado antes da condição ser avaliada para `false`. Entretanto, existe a possibilidade da expressão no corpo do `while` nunca ser avaliada caso a condição já seja avaliada para `false` logo no início. Nessa situação, o valor retornado pela expressão é `nil`, que é um valor utilizado justamente para representar a ausência de valores. A implementação da avaliação da nossa expressão de repetição foi feita utilizando uma função recursiva de cauda:
+Nossa linguagem possui a expressão `while` que permite com que uma expressão seja avaliada de forma repetida dada uma expressão de condição que deve ser avaliada em cada repetição. Enquanto a expressão de condição for avaliada para o valor `true`, a outra expressão vai ser avaliada. Esse processo só é encerrado quando a expressão de condição for avaliada para `false`. Como o nosso  `while` também é uma expressão, sua avaliação deve retornar um valor. Na **sew lang**, o valor retornado por uma expressão `while` corresponde ao último valor que foi avaliado antes da condição ser avaliada para `false`. Entretanto, existe a possibilidade da expressão no corpo do `while` nunca ser avaliada caso a condição já seja avaliada para `false` logo no início. Nessa situação, o valor retornado pela expressão é `nil`, que é um valor utilizado justamente para representar a ausência de valores. A implementação da avaliação da nossa expressão de repetição foi feita utilizando uma função recursiva de cauda:
 
 ```scala
   def eval(exp: Exp)(env: Environment): Value = exp match {
@@ -292,7 +294,7 @@ Nossa linguagem possui a expressão `while` que permite com que uma expresão se
 
 #### Expressão de Bloco
 
-As expressões implementadas até o momento são únicas, no sentido que definem uma única instrução. Entretanto, programas imperativos são implementados, geralmente, através da execução de várias instruções de forma sequencial, de modo que executamos uma operação seguida de outra para realizar a computação que estamos desejando. Para permitir isso, nossa linguagem implementa expressões de bloco. Uma expressão de bloco é uma expressão formada por outras expressões que são avaliadas de maneira sequencial, seguindo a ordem em que elas são inseridas no bloco. Como um bloco por si só também é uma expressão, o resultado da avaliação de um bloco é o resultado da sua última expressão a ser avaliada (se nenhuma expressão for definida, o resultado do blobo é `nil`). Uma outra característica de expressões de bloco é que elas criam um novo escopo através criação de um ambiente para as suas expressões. O ambiente que é criado para um bloco possui como pai o ambiente ao qual o bloco pertencia. Por exemplo, em um bloco aninhado, o pai do ambiente do bloco mais interno é o ambiente do bloco mais externo. Isso possibilita que variáveis que são definidas em um bloco mais externos possam ser referenciadas no bloco mais interno, mas o contrário não é veridade, visto que um abiente só possui referência para o seu ambiente pai e não para os filhos. A implementação da avaliação de uma expressão de bloco pode ser vista abaixo:
+As expressões implementadas até o momento são únicas, no sentido que definem uma única instrução. Entretanto, programas imperativos são implementados, geralmente, através da execução de várias instruções de forma sequencial, de modo que executamos uma operação seguida de outra para realizar a computação que estamos desejando. Para permitir isso, nossa linguagem implementa expressões de bloco. Uma expressão de bloco é uma expressão formada por outras expressões que são avaliadas de maneira sequencial, seguindo a ordem em que elas são inseridas no bloco. Como um bloco por si só também é uma expressão, o resultado da avaliação de um bloco é o resultado da sua última expressão a ser avaliada (se nenhuma expressão for definida, o resultado do bloco é `nil`). Uma outra característica de expressões de bloco é que elas criam um novo escopo através criação de um ambiente para as suas expressões. O ambiente que é criado para um bloco possui como pai o ambiente ao qual o bloco pertencia. Por exemplo, em um bloco aninhado, o pai do ambiente do bloco mais interno é o ambiente do bloco mais externo. Isso possibilita que variáveis que são definidas em um bloco mais externos possam ser referenciadas no bloco mais interno, mas o contrário não é verdade, visto que um ambiente só possui referência para o seu ambiente pai e não para os filhos. A implementação da avaliação de uma expressão de bloco pode ser vista abaixo:
 
 ```scala
   def eval(exp: Exp)(env: Environment): Value = exp match {
@@ -310,7 +312,7 @@ As expressões implementadas até o momento são únicas, no sentido que definem
 
 #### Expressões de Entrada e Saída
 
-Para finalizar o nosso intepretador, vamos implementar as expressões de entrada e saída de dados da **sew lang**. A expressão `print` recebe uma sequência de expressões que são avaliadas e tem seu valor impresso na tela. Independente dos valores avaliados em uma expressão `print`, o seu resultado é `nil`. Para a entrada de dados, a **sew lang** possui a expressão `read-num` que permite a leitura de um número digitado no teclado. As expressões `print` e `read-num` são implementadas utilizando as funções de entrada e saída disponíveis no Scala:
+Para finalizar o nosso interpretador, vamos implementar as expressões de entrada e saída de dados da **sew lang**. A expressão `print` recebe uma sequência de expressões que são avaliadas e tem seu valor impresso na tela. Independente dos valores avaliados em uma expressão `print`, o seu resultado é `nil`. Para a entrada de dados, a **sew lang** possui a expressão `read-num` que permite a leitura de um número digitado no teclado. As expressões `print` e `read-num` são implementadas utilizando as funções de entrada e saída disponíveis no Scala:
 
 ```scala
   def eval(exp: Exp)(env: Environment): Value = exp match {
@@ -328,16 +330,112 @@ Para finalizar o nosso intepretador, vamos implementar as expressões de entrada
 
 Além de `read-num` para a leitura de números, a **sew lang** também tem as expressões `read-bool` e `read-str` para a leitura de valores booleanos e strings, respectivamente. Seu trabalho é implementar a avaliação dessas duas expressões (ver [#13](https://github.com/jbsneto-cefetmg/sewlang-interpreter/blob/a359f3f659ab6c77de68ba5a732d0c2b8d4209ac/src/main/scala/sewlang/interpreter/ExpInterpreter.scala#L49)).
 
+#### Execução
+
+Com essa última implementação, nossa linguagem já está totalmente operável, considerando as expressões que foram descritas no seu [guia](SEW-GUIDE.md). O processo de execução do nosso interpretador é implementado no objeto [ExpFileRunner](src/main/scala/sewlang/runner/ExpFileRunner.scala). Esse processo consiste em: 
+
+1. Abrir um arquivo que é passado como entrada contendo o código fonte do programa a ser interpretado
+2. Colocar o conteúdo do arquivo dentro de uma expressão de bloco
+3. Passar esse programa pelo parser de *s-expressions* ([SExprParser](src/main/scala/sexpr/parser/SExprParser.scala))
+4. Passar a *s-expression* resultante pelo parser da AST da **sew lang** ([ExpParser](src/main/scala/sewlang/parser/ExpParser.scala))
+5. Por último, passar a expressão resultante para o interpretador para que o programa possa ser executado ([ExpInterpreter](src/main/scala/sewlang/interpreter/ExpInterpreter.scala)).
+
 ## Syntactic Sugar
 
-TODO
+Nossa linguagem possui um número restrito de expressões, mas não seria interessante implementar mais algumas? 
+
+Uma forma de se fazer isso é definir essas novas expressões, incrementar a nossa AST, depois incrementar o nosso parser para que ele reconheça as novas expressões, por fim incrementar nosso interpretador com a avaliação dessas novas expressões. Esse processo é inevitável quando queremos implementar expressões e recursos mais complexos, como adicionar a definição de funções na linguagem, por exemplo. Mas algumas novas expressões poderiam ser adicionadas sem que fosse necessário ter todo esse trabalho, visto que algumas expressões poderiam ser definidas em termos de outras que já foram implementadas. Isso é conhecido como [*syntatic sugar*](https://en.wikipedia.org/wiki/Syntactic_sugar) (açúcar sintático), uma forma de criar novas expressões mais "açucaradas" sem tornar a implementação da linguagem mais complexa. 
+
+Algumas construções clássicas de algumas linguagens de programação são implementadas dessa forma. Por exemplo, as atribuições ampliadas do C nada mais são do que açúcar sintáticos. O comando `x += 5;`, por exemplo, nada mais é do que uma versão simplificada do comando `x = x + 5;`, assim como `++a` pode ser definido como `a = a + 1` (se levar em conta apenas a atribuição). Também poderíamos enxergar o comando `for` do C como uma açúcar sintático visto que ele também pode ser definido em termos do `while`. Os dois códigos abaixo, por exemplo, são equivalentes:
+
+```c
+for(int i = 0; i < 10; i++) {
+	printf("%d\n", i);
+}
+```
+
+```c
+{
+	int i = 0;
+	while(i < 10) {
+		printf("%d\n", i);
+		i++;
+	}
+}
+```
+
+Mas se um comando ou expressão pode ser definido em termos de outros, por que ele deveria existir? A resposta para isso é a facilidade. Construções "açucaradas" tornam o código mais fácil de ler e escrever, além de deixar a linguagem mais expressiva. Isso tudo pode ser obtido sem que a "essência" da linguagem seja alterada.
+
+Partindo dessa premissa, vamos implementar novas expressões para a **sew lang** sem ter que alterar o nosso interpretador. Para isso, nossa estratégia vai ser fazer transformações sintáticas em *s-expressions* para que as novas expressões sejam definidas em termos das outras que já foram implementadas. Essas modificações vão ser feitas no nosso segundo parser ([ExpParser](src/main/scala/sewlang/parser/ExpParser.scala)), onde vamos incluir novos padrões para as novas expressões e vamos reescrever essas novas expressões para que elas sejam definidas em termos das expressões que já foram implementadas. Esse processo é conhecido como *desugaring* (algo como "desaçucarar"). Com isso, não vamos precisar mudar a nossa AST ([Exp](src/main/scala/sewlang/ast/Exp.scala)), assim como não vamos precisar mudar o nosso interpretador ([ExpInterpreter](src/main/scala/sewlang/interpreter/ExpInterpreter.scala)), uma vez que as novas expressões já vão chegar "desaçucaradas". Para incrementar nossa linguagem, decidimos implementar as seguintes expressões:
+
+1. `(++ id)`, que vai ser transformada na expressão `(set id (+ id 1))`
+2. `(+= id exp)`, que vai ser transformada na expressão `(set id (+ id exp))`
+3. `(for init cond mod body)`, que vai ser transformada na expressão `(begin init (while cond (begin body mod)))`
+
+Todas essas expressões foram inspiradas nos exemplos em C que mostramos mais acima. Para facilitar o processo de *desugaring*, criamos o objeto [ExpDesugar](src/main/scala/sewlang/parser/ExpDesugar.scala) que implementa o método `desugar` que recebe como entrada um objeto `SExpr` e também retorna um objeto `SExpr`. Se a *s-expression* corresponder a alguma das expressões que queremos reescrever, então é criado uma nova *s-expression* com as transformações necessárias para que a expressão possa ser escrita em termos das outras expressões que já foram implementadas. O código do nosso *desugar* pode ser visto abaixo:
+
+```scala
+object ExpDesugar {
+  def desugar(sexp: SExpr): SExpr = sexp match {
+    case SList(List(SSym("++"), id))      => SList(List(SSym("set"), id, SList(List(SSym("+"), id, SNum(1)))))
+    case SList(List(SSym("+="), id, exp)) => SList(List(SSym("set"), id, SList(List(SSym("+"), id, exp))))
+    case SList(List(SSym("for"), init, cond, mod, body)) =>
+      SList(List(
+        SSym("begin"),
+        init,
+        SList(List(
+          SSym("while"), cond,
+          SList(List(
+            SSym("begin"),
+            body,
+            mod))))))
+    case _ => sexp
+  }
+}
+```
+
+Agora só precisamos adicionar essas transformações no nosso parser para que as novas expressões possam ser utilizadas:
+
+```scala
+  def eval(exp: Exp)(env: Environment): Value = exp match {
+    // ...
+    case SList(List(SSym("++"), id)) => parse(ExpDesugar.desugar(sexp))
+    case SList(List(SSym("+="), id, exp)) => parse(ExpDesugar.desugar(sexp))
+    case SList(List(SSym("for"), init, cond, mod, body)) => parse(ExpDesugar.desugar(sexp))
+    // ...
+  }
+```
+
+Com isso, já podemos implementar um programa como o abaixo:
+
+```scheme
+(for (var x 1) (< x 11) (++ x)
+	(print "Number: " x)
+)
+```
+
+que acaba sendo muito mais simples do que esse outro (você não acha?):
+
+```scheme
+(begin
+	(var x 1)
+	(while (< x 11)
+		(begin
+			(print "Number: " x)
+			(set x (+ x 1))
+		)
+	)
+)
+```
+
+Sua última tarefa é implementar mais algumas expressões para a **sew lang**, mas dessa vez como açúcar sintáticos (ver [#14](https://github.com/jbsneto-cefetmg/sewlang-interpreter/blob/f3ffe229967dfd8473f6a39633bc31a51f8fca90/src/main/scala/sewlang/parser/ExpParser.scala#L47) ([#14](https://github.com/jbsneto-cefetmg/sewlang-interpreter/blob/f3ffe229967dfd8473f6a39633bc31a51f8fca90/src/main/scala/sewlang/parser/ExpDesugar.scala#L12)), [#15](https://github.com/jbsneto-cefetmg/sewlang-interpreter/blob/f3ffe229967dfd8473f6a39633bc31a51f8fca90/src/main/scala/sewlang/parser/ExpParser.scala#L50) ([#15](https://github.com/jbsneto-cefetmg/sewlang-interpreter/blob/f3ffe229967dfd8473f6a39633bc31a51f8fca90/src/main/scala/sewlang/parser/ExpDesugar.scala#L15)) e [#16](https://github.com/jbsneto-cefetmg/sewlang-interpreter/blob/f3ffe229967dfd8473f6a39633bc31a51f8fca90/src/main/scala/sewlang/parser/ExpParser.scala#L53) ([#16](https://github.com/jbsneto-cefetmg/sewlang-interpreter/blob/f3ffe229967dfd8473f6a39633bc31a51f8fca90/src/main/scala/sewlang/parser/ExpDesugar.scala#L28))). Inspirado no C, você vai implementar a operação de decremento (`(-- x)`) e mais expressões de atribuição ampliada (`-=, *=, /=`). Por último, você vai implementar mais um laço de repetição, o `(repeat body until-cond)`, que é inspirado no laço `repeat-until` da linguagem de programação [Lua](https://www.lua.org/manual/5.2/pt/manual.html#3.3.4). Nessa expressão, a expressão no corpo do laço (`body`) é avaliada até a condição ser verdadeira (`until-cond`), ou seja, enquanto a condição for falsa o laço continua.
 
 ## Desafios
 
 1. Na **sew lang**, o tipo *string* possui um uso mais restrito visto que não existe nenhuma expressão específica para manipular strings. Então na prática, seu uso serve apenas para a saída de dados (`print`). Você consegue pensar em operações específicas que tornariam o tipo mais útil na linguagem? Se sim, implemente!
 
-2. Você consegue pensar em novos tipos de expressões que poderiam ser implementadas na **sew lang** (talvez inspirado em instruções de outras linguagens de programação)? Se sim, como implementaria, como um açúcar sintático ou como uma expressão padrão da linguagem? Implemente!
+2. Você consegue pensar em novos tipos de expressões que poderiam ser implementadas na **sew lang** (talvez inspirado em instruções de outras linguagens de programação)? Se sim, como implementaria, como um açúcar sintático ou como uma expressão padrão da linguagem? Implemente! Quer uma sugestão? Implementa a expressão `cond` da linguagem de programação [Scheme](https://en.wikibooks.org/wiki/Scheme_Programming/Conditionals), ela é uma forma mais simplificada de escrever uma expressão condicional `if` com várias condições.
 
 3. Implemente um interpretador interativo para a **sew lang** semelhante aos interpretadores interativos disponíveis para linguagens como Python e Scala. Esses interpretadores são chamados de REPL, que é a sigla para *Read-Eval-Print-Loop*, que indica as operações que devem ser implementadas: ler um comando, avaliar ele, imprimir o resultado da avaliação e repetir o processo.
 
-4. Implemente um *transpiler* (compilador) para a **sew lang**. Uma simples diferença entre um interpretador e um compilador é que o primeiro recebe como entrada o código fonte de um programa e o executa. Já um *transpiler*/compilador recebe o código fonte de um programa como entrada e gera como saída uma versão desse programa em alguma outra linguagem. Considerando nosso projeto, é possível aproveitar todo o código relacionado com o processo de *parsing* e implementar um *transpiler*/compilador que recebe como entrada uma expressão (`Exp`, assim como nosso interpretador) e retorna como saída o código fonte de um programa que corresponde a aquela expressão (seguindo as regras de tradução que você definir). Por exemplo, uma expressão como `(var x (+ 2 3))` poderia ser traduzida para a expressão `var x = (2 + 3);` em Javascript (ou qualquer outra linguagem com sintaxe parecida) mantendo a mesma semântica de nossa linguagem. O desafio é implementar um *transpiler* que traduz um código em **sew lang** para outra linguagem de programação.
+4. Implemente um *transpiler* (compilador) para a **sew lang**. Uma simples diferença entre um interpretador e um compilador é que o primeiro recebe como entrada o código fonte de um programa e o executa. Já um *transpiler*/compilador recebe o código fonte de um programa como entrada e gera como saída uma versão desse programa em alguma outra linguagem. Considerando nosso projeto, é possível aproveitar todo o código relacionado com o processo de *parsing* e implementar um *transpiler*/compilador que recebe como entrada uma expressão (`Exp`, assim como nosso interpretador) e retorna como saída o código fonte de um programa em outra linguagem de programação que corresponde a aquela expressão (seguindo as regras de tradução que você definir). Por exemplo, uma expressão como `(var x (+ 2 3))` poderia ser traduzida para a expressão `var x = (2 + 3);` em Javascript (ou qualquer outra linguagem com sintaxe parecida) mantendo a mesma semântica de nossa linguagem. O desafio é implementar um *transpiler* que traduz um código em **sew lang** para alguma outra linguagem de programação.
