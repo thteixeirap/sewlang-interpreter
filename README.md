@@ -44,8 +44,8 @@ Uma vantagem de se trabalhar com *s-expressions* é que por ter uma sintaxe muit
 ```scala
 abstract class SExpr
 case class SNum(num: Double) extends SExpr
-case class SString(string: String)
-case class SSym(symbol: String)
+case class SString(string: String) extends SExpr
+case class SSym(symbol: String) extends SExpr
 case class SList(list: List[SExpr]) extends SExpr
 ```
 
