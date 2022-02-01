@@ -62,13 +62,24 @@ object ExpParser {
 
     // As tarefas devem ser implementadas seguindo a ordem de numeração, logo, as três tarefas abaixo só devem ser implementadas após a #13.
     case SList(List(SSym("++"), id)) => parse(ExpDesugar.desugar(sexp))
+    
     // #14 Implemente o desugar para a expressão (-- id)
+    case SList(List(SSym("--"), id)) => parse(ExpDesugar.desugar(sexp)) //  NOVO (-- id)
+    //-----------------------------------------------------------------------------------
 
     case SList(List(SSym("+="), id, exp)) => parse(ExpDesugar.desugar(sexp))
+    
     // #15 Implemente o desugar para as expressões (*= id exp), (-= id exp) e (/= id exp)
+    case SList(List(SSym("*="), id, exp)) => parse(ExpDesugar.desugar(sexp)) //  NOVO (*= id exp)
+    case SList(List(SSym("-="), id, exp)) => parse(ExpDesugar.desugar(sexp)) //  NOVO (-= id exp)
+    case SList(List(SSym("/="), id, exp)) => parse(ExpDesugar.desugar(sexp)) //  NOVO (/= id exp)
+    //------------------------------------------------------------------------------------
 
     case SList(List(SSym("for"), init, cond, mod, body)) => parse(ExpDesugar.desugar(sexp))
+    
     // #16 Implemente o desugar para a expressão (repeat body until-cond)
+    case SList(List(SSym("repeat"),,body,untilCondicion)) => parse(ExpDesugar.desugar(sexp)) // NOVO (repeat body until-cond)
+    //-------------------------------------------------------------------------------------
 
     case _ => throw ExpParserException(s"error in the expression '$sexp'")
   }
