@@ -13,17 +13,30 @@ case class IdExp(id: String) extends Exp
 // Arithmetic Expressions
 case class SumExp(exp1: Exp, exp2: Exp) extends Exp // (+ exp1 exp2)
 case class MultExp(exp1: Exp, exp2: Exp) extends Exp // (* exp1 exp2)
+
 // #1 Defina a AST para as expressões (- exp1 exp2), (/ exp1 exp2) e (- exp)
+case class SubExp(exp1: Exp, exp2: Exp) extends Exp //NOVO   (- exp1 exp2)
+case class DiviExp(exp1: Exp, exp2: Exp) extends Exp //NOVO  (/ exp1 exp2)
+case class NegExp(exp: Exp) extends Exp // NOVO (- exp)
+//----------------------------------------------------------------------
 
 // Relation Expressions
 case class EqualExp(exp1: Exp, exp2: Exp) extends Exp // (= exp1 exp2)
 case class LessThanExp(exp1: Exp, exp2: Exp) extends Exp // (< exp1 exp2)
+
 // #2 Defina a AST para as expressões (<= exp1 exp2), (> exp1 exp2) e (>= exp1 exp2)
+case class LessEqualThanExp(exp1: Exp, exp2: Exp) extends Exp // NOVO (<= exp1 exp2)
+case class BiggerThanExp(exp1: Exp, exp2: Exp) extends Exp // NOVO (> exp1 exp2)
+case class BiggerEqualThanExp(exp1: Exp, exp2: Exp) extends Exp // NOVO (>= exp1 exp2)
+//-----------------------------------------------------------------------
 
 // Boolean Expressions
 case class NotExp(exp: Exp) extends Exp // (not exp)
 case class AndExp(exp1: Exp, exp2: Exp) extends Exp // (and exp1 exp2)
+
 // #3 Defina a AST para a expressão (or exp1 exp2)
+case class OrExp(exp1: Exp, exp2: Exp) extends Exp // NOVO (or exp1 exp2)
+//------------------------------------------------------------------------
 
 // Variable Declaration and Assignment Expressions
 case class VarDeclExp(id: Exp, exp: Exp) extends Exp // (var id exp)
@@ -41,4 +54,8 @@ case class BlockExp(exps: List[Exp]) extends Exp // (begin exp*)
 // IO Expressions
 case class PrintExp(exps: List[Exp]) extends Exp // (print exp*)
 case object ReadNumExp extends Exp // (read-num)
+
 // #4 Defina a AST para as expressões (read-bool) e (read-str)
+case object ReadBoolExp extends Exp // NOVO  (read-bool)
+case object ReadStrExp extends Exp // NOVO  (read-str)
+//---------------------------------------------------------------
