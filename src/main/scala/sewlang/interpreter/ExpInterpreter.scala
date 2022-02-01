@@ -63,6 +63,7 @@ object ExpInterpreter {
     // #13 Implemente a avaliação das expressões (read-bool) e (read-str)
     case ReadBoolExp                   => NumberV(readBoolean())
     case ReadStrExp                    => NumberV(readLine())
+    //---------------------------------------------------------------------------------------------------------
   }
 
   private[interpreter] var print: (Any) => Unit = println // for testing purposes
