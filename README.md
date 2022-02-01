@@ -328,7 +328,7 @@ Para finalizar o nosso interpretador, vamos implementar as expressões de entrad
   }
 ```
 
-Além de `read-num` para a leitura de números, a **sew lang** também tem as expressões `read-bool` e `read-str` para a leitura de valores booleanos e strings, respectivamente. Seu trabalho é implementar a avaliação dessas duas expressões (ver [#13](https://github.com/thteixeirap/sewlang-interpreter/blob/a359f3f659ab6c77de68ba5a732d0c2b8d4209ac/src/main/scala/sewlang/interpreter/ExpInterpreter.scala#L49)).
+Além de `read-num` para a leitura de números, a **sew lang** também tem as expressões `read-bool` e `read-str` para a leitura de valores booleanos e strings, respectivamente. Seu trabalho é implementar a avaliação dessas duas expressões (ver [#13](https://github.com/thteixeirap/sewlang-interpreter/blob/main/src/main/scala/sewlang/interpreter/ExpInterpreter.scala#L63)).
 
 #### Execução
 
