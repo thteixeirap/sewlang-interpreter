@@ -79,9 +79,24 @@ object ExpParser {
  * como 'while', por exemplo, como um identificador.
  */
 
-  private def isIdentifier(str: String) = {
+  private def isIdentifier(str: String): Boolean = {
     val regex = """^[a-zA-Z][a-zA-Z0-9_]*$""".r
-    regex.pattern.matcher(str).matches()
+   if ( regex.pattern.matcher(str).matches()) {
+    str match{
+      case "while" => return true
+      case "if" => return true
+      case "print" => return true
+      case "var" => return true
+      case "begin" => return true
+      case "print" => return true
+      case "true" => return true
+      case "false" => return true
+      case "print" => return true
+      case "set" => return true
+      case "init" => return true
+      case _ => return false
+    }
+   }
+    return false
   }
-
 }
