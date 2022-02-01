@@ -31,7 +31,7 @@ object ExpInterpreter {
     // #10 Implemente a avaliação das expressões (- exp1 exp2), (/ exp1 exp2) e (- exp)
     case SubExp(exp1, exp2)            => evalArithExp(_ - _, eval(exp1)(env), eval(exp2)(env)) // NOVO (- exp1 exp2)
     case DiviExp(exp1, exp2)           => evalArithExp(_ / _, eval(exp1)(env), eval(exp2)(env)) // NOVO (/ exp1 exp2)
-    //                           FALTA O (- exp) 
+    case NegExp(exp1)                  => evalNegExp(-_,eval(exp1)(env)) // NOVO (- exp)
     //-------------------------------------------------------------------------------------------------------
 
     case EqualExp(exp1, exp2)          => evalRelationalExp(_ == _, eval(exp1)(env), eval(exp2)(env))
@@ -90,6 +90,11 @@ object ExpInterpreter {
   private def evalRelationalExp(op: (Double, Double) => Boolean, val1: Value, val2: Value): Value = (val1, val2) match {
     case (NumberV(num1), NumberV(num2)) => BoolV(op(num1, num2))
     case _                              => throw ExpInvalidValueTypeException(s"relational expression requires number values but received '$val1' and '$val2'")
+  }
+  
+   private def evalNegExp(op: (Double)   => Double, val1: Value): Value = (val1) match {
+    case (NumberV(num1))                => NumberV(op(num1))
+    case _                              => throw ExpInvalidValueTypeException(s"arithmetic expression requires number values but received '$val1' '")
   }
 
   private def evalNotExp(value: Value): Value = value match {
