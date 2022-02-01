@@ -27,15 +27,28 @@ object ExpInterpreter {
 
     case SumExp(exp1, exp2)            => evalArithExp(_ + _, eval(exp1)(env), eval(exp2)(env))
     case MultExp(exp1, exp2)           => evalArithExp(_ * _, eval(exp1)(env), eval(exp2)(env))
+    
     // #10 Implemente a avaliação das expressões (- exp1 exp2), (/ exp1 exp2) e (- exp)
+     case SubExp(exp1, exp2)            => evalArithExp(_ - _, eval(exp1)(env), eval(exp2)(env)) // NOVO (- exp1 exp2)
+    case DiviExp(exp1, exp2)           => evalArithExp(_ / _, eval(exp1)(env), eval(exp2)(env)) // NOVO (/ exp1 exp2)
+    //                           FALTA O (- exp) 
+    //-------------------------------------------------------------------------------------------------------
 
     case EqualExp(exp1, exp2)          => evalRelationalExp(_ == _, eval(exp1)(env), eval(exp2)(env))
     case LessThanExp(exp1, exp2)       => evalRelationalExp(_ < _, eval(exp1)(env), eval(exp2)(env))
+    
     // #11 Implemente a avaliação das expressões (<= exp1 exp2), (> exp1 exp2) e (>= exp1 exp2)
+    case LessEqualThanExp(exp1, exp2)  => evalRelationalExp(_ <= _, eval(exp1)(env), eval(exp2)(env)) // (<= exp1 exp2)
+    case BiggerThanExp(exp1, exp2)     => evalRelationalExp(_ > _, eval(exp1)(env), eval(exp2)(env)) // (> exp1 exp2)
+    case BiggerEqualThanExp(exp1, exp2)=> evalRelationalExp(_ >= _, eval(exp1)(env), eval(exp2)(env)) // (>= exp1 exp2)
+    //--------------------------------------------------------------------------------------------------------
 
     case NotExp(exp)                   => evalNotExp(eval(exp)(env))
     case AndExp(exp1, exp2)            => evalBoolExp(_ && _, eval(exp1)(env), eval(exp2)(env))
+    
     // #12 Implemente a avaliação da expressão (or exp1 exp2)
+    case OrExp(exp1, exp2)            => evalBoolExp(_ || _, eval(exp1)(env), eval(exp2)(env)) // (or exp1 exp2)
+    //--------------------------------------------------------------------------------------------------------
 
     case IfExp(cond, thenExp, elseExp) => evalIfExp(eval(cond)(env), thenExp, elseExp)(env)
 
@@ -46,12 +59,18 @@ object ExpInterpreter {
     case PrintExp(exps)                => evalPrintExp(exps)(env)
 
     case ReadNumExp                    => NumberV(readDouble())
+    
     // #13 Implemente a avaliação das expressões (read-bool) e (read-str)
+    case ReadBoolExp                   => NumberV(readBoolean())
+    case ReadStrExp                    => NumberV(readLine())
   }
 
   private[interpreter] var print: (Any) => Unit = println // for testing purposes
   private[interpreter] var readDouble: () => Double = io.StdIn.readDouble // for testing purposes
+  private[interpreter] var readBoolean: () => Boolean = io.StdIn.readBoolean // (read-bool)
+  private[interpreter] var readString: ()  => String = io.StdIn.readLine // (read-str) //???? readString ou readLine
 
+  
   private def evalVarDecl(id: Exp, exp: Exp)(env: Environment): Value = id match {
     case IdExp(id) => env.declare(id, eval(exp)(env))
     case _         => throw ExpIdentifierRequiredException("identifier is required in a variable declaration")
