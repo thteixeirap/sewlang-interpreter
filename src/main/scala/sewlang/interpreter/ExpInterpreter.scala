@@ -29,7 +29,7 @@ object ExpInterpreter {
     case MultExp(exp1, exp2)           => evalArithExp(_ * _, eval(exp1)(env), eval(exp2)(env))
     
     // #10 Implemente a avaliação das expressões (- exp1 exp2), (/ exp1 exp2) e (- exp)
-     case SubExp(exp1, exp2)            => evalArithExp(_ - _, eval(exp1)(env), eval(exp2)(env)) // NOVO (- exp1 exp2)
+    case SubExp(exp1, exp2)            => evalArithExp(_ - _, eval(exp1)(env), eval(exp2)(env)) // NOVO (- exp1 exp2)
     case DiviExp(exp1, exp2)           => evalArithExp(_ / _, eval(exp1)(env), eval(exp2)(env)) // NOVO (/ exp1 exp2)
     //                           FALTA O (- exp) 
     //-------------------------------------------------------------------------------------------------------
