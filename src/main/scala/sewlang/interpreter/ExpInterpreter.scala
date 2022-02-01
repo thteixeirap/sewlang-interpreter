@@ -61,8 +61,8 @@ object ExpInterpreter {
     case ReadNumExp                    => NumberV(readDouble())
     
     // #13 Implemente a avaliação das expressões (read-bool) e (read-str)
-    case ReadBoolExp                   => NumberV(readBoolean())
-    case ReadStrExp                    => NumberV(readLine())
+    case ReadBoolExp                   => BoolV(readBoolean())
+    case ReadStrExp                    => StringV(readString())
     //---------------------------------------------------------------------------------------------------------
   }
 
