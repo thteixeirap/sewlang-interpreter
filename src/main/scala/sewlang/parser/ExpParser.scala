@@ -78,7 +78,7 @@ object ExpParser {
     case SList(List(SSym("for"), init, cond, mod, body)) => parse(ExpDesugar.desugar(sexp))
     
     // #16 Implemente o desugar para a expressão (repeat body until-cond)
-    case SList(List(SSym("repeat"),,body,untilCondicion)) => parse(ExpDesugar.desugar(sexp)) // NOVO (repeat body until-cond)
+    case SList(List(SSym("repeat"),body,untilCondicion)) => parse(ExpDesugar.desugar(sexp)) // NOVO (repeat body until-cond)
     //-------------------------------------------------------------------------------------
 
     case _ => throw ExpParserException(s"error in the expression '$sexp'")
