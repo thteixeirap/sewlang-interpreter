@@ -84,30 +84,30 @@ object ExpParser {
     case _ => throw ExpParserException(s"error in the expression '$sexp'")
   }
 
-  /*
- * #9 Implemente a verificação de palavras reservadas de
- * modo que não seja possível utilizar uma palavra-chave
- * como 'while', por exemplo, como um identificador.
- */
+  /* #9 Implemente a verificação de palavras reservadas de modo que não seja possível 
+ utilizar uma palavra-chave como 'while', por exemplo, como um identificador.*/
 
-  private def isIdentifier(str: String): Boolean = {
+  private def isIdentifier(str: String) = {
     val regex = """^[a-zA-Z][a-zA-Z0-9_]*$""".r
-   if ( regex.pattern.matcher(str).matches()) {
-    str match{
-      case "while" => return true
-      case "if" => return true
-      case "print" => return true
-      case "var" => return true
-      case "begin" => return true
-      case "print" => return true
-      case "true" => return true
-      case "false" => return true
-      case "print" => return true
-      case "set" => return true
-      case "init" => return true
-      case _ => return false
+    str match {
+      case "while" => throw ExpParserException(s"error! '$str' is a key-word")
+      case "var" => throw ExpParserException(s"error! '$str' is a key-word")
+      case "set" => throw ExpParserException(s"error! '$str' is a key-word")
+      case "if" => throw ExpParserException(s"error! '$str' is a key-word")
+      case "true" => throw ExpParserException(s"error! '$str' is a key-word")
+      case "false" => throw ExpParserException(s"error! '$str' is a key-word")
+      case "nil" => throw ExpParserException(s"error! '$str' is a key-word")
+      case "not" => throw ExpParserException(s"error! '$str' is a key-word")
+      case "and" => throw ExpParserException(s"error! '$str' is a key-word")
+      case "or" => throw ExpParserException(s"error! '$str' is a key-word")
+      case "begin" => throw ExpParserException(s"error! '$str' is a key-word")
+      case "print" => throw ExpParserException(s"error! '$str' is a key-word")
+      case "read-num" => throw ExpParserException(s"error! '$str' is a key-word")
+      case "read-bool" => throw ExpParserException(s"error! '$str' is a key-word")
+      case "read-str" => throw ExpParserException(s"error! '$str' is a key-word")
+      case "for" => throw ExpParserException(s"error! '$str' is a key-word")
     }
-   }
+  }
     return false
   }
 }
