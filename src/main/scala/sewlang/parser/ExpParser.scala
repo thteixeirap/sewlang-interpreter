@@ -108,6 +108,4 @@ object ExpParser {
       case "for" => throw ExpParserException(s"error! '$str' is a key-word")
     }
   }
-    return false
-  }
 }
