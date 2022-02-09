@@ -22,7 +22,7 @@ object ExpParser {
     // #5 Implemente o parser para as expressões (- exp1 exp2), (/ exp1 exp2) e (- exp)
     case SList(List(SSym("-"), exp1, exp2)) => SubExp(parse(exp1), parse(exp2)) // NOVO (- exp1 exp2)
     case SList(List(SSym("/"), exp1, exp2)) => DiviExp(parse(exp1), parse(exp2)) // NOVO  (/ exp1 exp2)
-    case SList(List(SSym("-"), exp)) => NegExp(parse(exp)) // NOVO (- exp)
+    case SList(List(SSym("not"), exp))      => NotExp(parse(exp)) // (not exp)
     //-----------------------------------------------------------------------------------------------------
 
     case SList(List(SSym("="), exp1, exp2)) => EqualExp(parse(exp1), parse(exp2)) // (= exp1 exp2)
@@ -89,23 +89,27 @@ object ExpParser {
 
   private def isIdentifier(str: String) = {
     val regex = """^[a-zA-Z][a-zA-Z0-9_]*$""".r
-    str match {
-      case "while" => throw ExpParserException(s"error! '$str' is a key-word")
-      case "var" => throw ExpParserException(s"error! '$str' is a key-word")
-      case "set" => throw ExpParserException(s"error! '$str' is a key-word")
-      case "if" => throw ExpParserException(s"error! '$str' is a key-word")
-      case "true" => throw ExpParserException(s"error! '$str' is a key-word")
-      case "false" => throw ExpParserException(s"error! '$str' is a key-word")
-      case "nil" => throw ExpParserException(s"error! '$str' is a key-word")
-      case "not" => throw ExpParserException(s"error! '$str' is a key-word")
-      case "and" => throw ExpParserException(s"error! '$str' is a key-word")
-      case "or" => throw ExpParserException(s"error! '$str' is a key-word")
-      case "begin" => throw ExpParserException(s"error! '$str' is a key-word")
-      case "print" => throw ExpParserException(s"error! '$str' is a key-word")
-      case "read-num" => throw ExpParserException(s"error! '$str' is a key-word")
-      case "read-bool" => throw ExpParserException(s"error! '$str' is a key-word")
-      case "read-str" => throw ExpParserException(s"error! '$str' is a key-word")
-      case "for" => throw ExpParserException(s"error! '$str' is a key-word")
+    if ( regex.pattern.matcher(str).matches()) {
+      str match{
+       case "while"     => throw ExpParserException(s"error! '$str' is a key-word")
+       case "var"       => throw ExpParserException(s"error! '$str' is a key-word")
+       case "set"       => throw ExpParserException(s"error! '$str' is a key-word")
+       case "if"        => throw ExpParserException(s"error! '$str' is a key-word")
+       case "true"      => throw ExpParserException(s"error! '$str' is a key-word")
+       case "false"     => throw ExpParserException(s"error! '$str' is a key-word")
+       case "nil"       => throw ExpParserException(s"error! '$str' is a key-word")
+       case "not"       => throw ExpParserException(s"error! '$str' is a key-word")
+       case "and"       => throw ExpParserException(s"error! '$str' is a key-word")
+       case "or"        => throw ExpParserException(s"error! '$str' is a key-word")
+       case "begin"     => throw ExpParserException(s"error! '$str' is a key-word")
+       case "print"     => throw ExpParserException(s"error! '$str' is a key-word")
+       case "read-num"  => throw ExpParserException(s"error! '$str' is a key-word")
+       case "read-bool" => throw ExpParserException(s"error! '$str' is a key-word")
+       case "read-str"  => throw ExpParserException(s"error! '$str' is a key-word")
+       case "for"       => throw ExpParserException(s"error! '$str' is a key-word")
+       case _ => true
+      }
     }
+    else false
   }
 }
