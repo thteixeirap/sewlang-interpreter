@@ -22,7 +22,7 @@ object ExpParser {
     // #5 Implemente o parser para as expressões (- exp1 exp2), (/ exp1 exp2) e (- exp)
     case SList(List(SSym("-"), exp1, exp2)) => SubExp(parse(exp1), parse(exp2)) // NOVO (- exp1 exp2)
     case SList(List(SSym("/"), exp1, exp2)) => DiviExp(parse(exp1), parse(exp2)) // NOVO  (/ exp1 exp2)
-    case SList(List(SSym("not"), exp))      => NotExp(parse(exp)) // (not exp)
+    case SList(List(SSym("-"), exp))        => NegExp(parse(exp)) // (- exp)
     //-----------------------------------------------------------------------------------------------------
 
     case SList(List(SSym("="), exp1, exp2)) => EqualExp(parse(exp1), parse(exp2)) // (= exp1 exp2)
