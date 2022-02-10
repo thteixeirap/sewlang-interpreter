@@ -34,16 +34,16 @@ object ExpDesugar {
             mod))))))
 
     // #16 Implemente o desugar para a expressão (repeat body until-cond)
-    case SList(List(SSym("repeat"),body,untilCondicion)) =>
+    case SList(List(SSym("repeat"),body,condicion)) =>
       SList(List(
         SSym("begin"),
         body,
         SList(List(
-          SSym("while"),SList(List(SSym("not"),untilCondicion,
+          SSym("while"),SList(List(SSym("not"),untilCondicion)),
           SList(List(
             SSym("begin"),
             body
-          ))))))))
+          ))))))
     //----------------------------------------------------------------------------------------------------------------------------------------------
     
     case _ => sexp
